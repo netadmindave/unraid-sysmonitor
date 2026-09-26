@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>SysMonitor</Name>
+  <Repository>ghcr.io/netadmindave/sysmonitor:latest</Repository>
+  <Registry>https://github.com/netadmindave/sysmonitor/pkgs/container/sysmonitor</Registry>
+  <Network>host</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/netadmindave/sysmonitor/issues</Support>
+  <Project>https://github.com/netadmindave/sysmonitor</Project>
+  <Overview>Syslog server, status monitor and local-AI digests for your home lab, published to Home Assistant over MQTT. Recommendations only: it never changes anything.</Overview>
+  <Description>SysMonitor receives syslog on UDP/TCP 5514 (Unraid, UniFi including IDS/IPS alerts, Nginx Proxy Manager access logs, Linux hosts) and JSON over HTTP (Home Assistant via Node-RED, NetSentry). Rules turn log lines into issues; pollers add Unraid array and disk state, ZFS pool health, CPU temperature, containers that should be running, and image updates. A local Ollama model writes hourly, daily and weekly digests with recommendations.[br][br]Home Assistant gets a "SysMonitor" device with 15 entities via MQTT discovery; a ready-made dashboard and notification automations are in the project repository.[br][br]Uses host networking by default; see the project README for running it on its own br0 address. Works out of the box as a syslog server. Edit config.yaml in the Config path to add MQTT and name your sources, then restart. Remove the Docker socket mapping if you prefer not to grant it; only read requests are made.</Description>
+  <Category>Tools:System Network:Management HomeAutomation:</Category>
+  <WebUI>http://[IP]:[PORT:8514]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/netadmindave/unraid-sysmonitor/main/templates/sysmonitor.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/netadmindave/unraid-sysmonitor/main/icon.svg</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <Requires>MQTT broker for Home Assistant entities (optional). Ollama for AI digests (optional). NetSentry for network scan status (optional).</Requires>
+  <Config Name="Config" Target="/config" Default="/mnt/user/appdata/sysmonitor/config" Mode="rw" Description="config.yaml; a default is written on first start." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/sysmonitor/config</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/sysmonitor/data" Mode="rw" Description="Log database and reports." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/sysmonitor/data</Config>
+  <Config Name="NetSentry data" Target="/netsentry" Default="/mnt/user/appdata/netsentry/data" Mode="ro" Description="NetSentry's data folder, read-only. Leave empty if you don't run NetSentry." Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/netsentry/data</Config>
+  <Config Name="Unraid state" Target="/unraid/emhttp" Default="/var/local/emhttp" Mode="ro" Description="Unraid array and disk status, read-only." Type="Path" Display="advanced" Required="false" Mask="false">/var/local/emhttp</Config>
+  <Config Name="Update status" Target="/unraid/unraid-update-status.json" Default="/var/lib/docker/unraid-update-status.json" Mode="ro" Description="Unraid's container update check results. Remove if the file doesn't exist yet." Type="Path" Display="advanced" Required="false" Mask="false">/var/lib/docker/unraid-update-status.json</Config>
+  <Config Name="Autostart list" Target="/unraid/unraid-autostart" Default="/var/lib/docker/unraid-autostart" Mode="ro" Description="Which containers should be running. Remove if the file doesn't exist yet." Type="Path" Display="advanced" Required="false" Mask="false">/var/lib/docker/unraid-autostart</Config>
+  <Config Name="Docker socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="ro" Description="Container state. Only GET requests are made, but the socket grants full Docker control; remove to opt out." Type="Path" Display="advanced" Required="false" Mask="false">/var/run/docker.sock</Config>
+  <Config Name="MQTT password" Target="MQTT_PASSWORD" Default="" Mode="" Description="Password for the MQTT user in config.yaml." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Ingest token" Target="INGEST_TOKEN" Default="" Mode="" Description="Optional shared secret for POST /ingest (header X-SysMonitor-Token)." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Digest on start" Target="RUN_DIGEST_ON_START" Default="false" Mode="" Description="true = write a daily digest when the container starts (for testing)." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="TZ" Target="TZ" Default="America/New_York" Mode="" Description="Time zone for schedules and reports." Type="Variable" Display="advanced" Required="false" Mask="false">America/New_York</Config>
+</Container>

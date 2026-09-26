@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<CommunityApplications>
+  <Profile>SysMonitor: one container that collects home lab logs (syslog, UniFi, Nginx Proxy Manager, Home Assistant), tracks Unraid, ZFS and container status, turns it into issues and local-AI digests, and publishes everything to Home Assistant over MQTT. Recommendations only. Support via GitHub issues on the project repository.</Profile>
+  <Icon>https://raw.githubusercontent.com/netadmindave/unraid-sysmonitor/main/icon.svg</Icon>
+  <WebPage>https://github.com/netadmindave/unraid-sysmonitor</WebPage>
+</CommunityApplications>
